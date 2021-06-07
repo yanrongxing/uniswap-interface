@@ -46,22 +46,6 @@ export default function RangeSelector({
 
   return (
     <AutoColumn gap="md">
-      <PresetsButtons
-        setRange={(numTicks) => {
-          const [range1, range2] = getSetRange(numTicks)
-          batch(() => {
-            onLeftRangeInput(isSorted ? range1 : range2)
-            onRightRangeInput(isSorted ? range2 : range1)
-          })
-        }}
-        setFullRange={() => {
-          const [range1, range2] = getSetFullRange()
-          batch(() => {
-            onLeftRangeInput(isSorted ? range1 : range2)
-            onRightRangeInput(isSorted ? range2 : range1)
-          })
-        }}
-      />
       <RowBetween>
         <StepCounter
           value={leftPrice?.toSignificant(5) ?? ''}
@@ -88,6 +72,23 @@ export default function RangeSelector({
           title={<Trans>Max Price</Trans>}
         />
       </RowBetween>
+
+      <PresetsButtons
+        setRange={(numTicks) => {
+          const [range1, range2] = getSetRange(numTicks)
+          batch(() => {
+            onLeftRangeInput(isSorted ? range1 : range2)
+            onRightRangeInput(isSorted ? range2 : range1)
+          })
+        }}
+        setFullRange={() => {
+          const [range1, range2] = getSetFullRange()
+          batch(() => {
+            onLeftRangeInput(isSorted ? range1 : range2)
+            onRightRangeInput(isSorted ? range2 : range1)
+          })
+        }}
+      />
     </AutoColumn>
   )
 }
