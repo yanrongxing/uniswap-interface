@@ -16,7 +16,7 @@ import { YellowCard, OutlineCard, BlueCard, LightCard } from '../../components/C
 import { AutoColumn } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { RowBetween, RowFixed } from '../../components/Row'
+import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import approveAmountCalldata from '../../utils/approveAmountCalldata'
@@ -684,24 +684,24 @@ export default function AddLiquidity({
                   />
 
                   {price && baseCurrency && quoteCurrency && !noLiquidity && (
-                    <LightCard style={{ padding: '12px' }}>
-                      <AutoColumn gap="4px">
-                        <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
-                          <Trans>Current Price</Trans>
-                        </TYPE.main>
-                        <TYPE.body fontWeight={500} textAlign="center" fontSize={20}>
+                    <OutlineCard style={{ padding: '12px' }}>
+                      <AutoRow gap="4px" justify="center">
+                        <TYPE.body color="text2" fontSize={12}>
+                          <Trans>Current Price:</Trans>
+                        </TYPE.body>
+                        <TYPE.body fontWeight={500} color="text2" fontSize={12}>
                           <HoverInlineText
                             maxCharacters={20}
                             text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
                           />{' '}
                         </TYPE.body>
-                        <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
+                        <TYPE.body color="text2" fontSize={12}>
                           <Trans>
                             {quoteCurrency?.symbol} per {baseCurrency.symbol}
                           </Trans>
-                        </TYPE.main>
-                      </AutoColumn>
-                    </LightCard>
+                        </TYPE.body>
+                      </AutoRow>
+                    </OutlineCard>
                   )}
 
                   {outOfRange ? (
