@@ -498,8 +498,8 @@ export function useRangeHopCallbacks(
     (numTicks: number) => {
       if (baseToken && quoteToken && feeAmount && pool) {
         // calculate range around current price given `numTicks`
-        const newPriceLower = tickToPrice(baseToken, quoteToken, pool.tickCurrent - numTicks * TICK_SPACINGS[feeAmount])
-        const newPriceUpper = tickToPrice(baseToken, quoteToken, pool.tickCurrent + numTicks * TICK_SPACINGS[feeAmount])
+        const newPriceLower = tickToPrice(baseToken, quoteToken, pool.tickCurrent - numTicks)
+        const newPriceUpper = tickToPrice(baseToken, quoteToken, pool.tickCurrent + numTicks)
 
         return [
           newPriceLower.toSignificant(5, undefined, Rounding.ROUND_UP),

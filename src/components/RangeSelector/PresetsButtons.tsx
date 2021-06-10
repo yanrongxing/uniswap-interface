@@ -22,17 +22,17 @@ interface PresetsButtonProps {
 export default function PresetsButtons({ setRange, setFullRange }: PresetsButtonProps) {
   return (
     <AutoRow gap="4px" width="auto">
-      <Button onClick={() => setRange(1)}>
+      <Button onClick={() => setRange(10)}>
         <TYPE.body fontSize={12}>
           <Trans>+/- 0.1%</Trans>
         </TYPE.body>
       </Button>
-      <Button onClick={() => setRange(50)}>
+      <Button onClick={() => setRange(500)}>
         <TYPE.body fontSize={12}>
           <Trans>+/- 5%</Trans>
         </TYPE.body>
       </Button>
-      <Button onClick={() => setRange(100)}>
+      <Button onClick={() => setRange(1000)}>
         <TYPE.body fontSize={12}>
           <Trans>+/- 10%</Trans>
         </TYPE.body>

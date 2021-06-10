@@ -439,7 +439,7 @@ export default function AddLiquidity({
                   <AutoColumn gap="md">
                     <RowBetween paddingBottom="20px">
                       <TYPE.label>
-                        <Trans>Select a pair</Trans>
+                        <Trans>Select Pair</Trans>
                       </TYPE.label>
                       <ButtonText onClick={clearAll}>
                         <TYPE.blue fontSize="12px">
@@ -621,7 +621,7 @@ export default function AddLiquidity({
                 <DynamicSection gap="md" disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}>
                   <RowBetween>
                     <TYPE.label>
-                      <Trans>Set Price Range</Trans>
+                      <Trans>Your Position</Trans>
                     </TYPE.label>
 
                     {baseCurrency && quoteCurrency ? (
