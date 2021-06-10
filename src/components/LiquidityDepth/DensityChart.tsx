@@ -10,11 +10,11 @@ import { usePoolTickData, PRICE_FIXED_DIGITS } from 'hooks/usePoolTickData'
 import { TickProcessed } from 'constants/ticks'
 import Loader from 'components/Loader'
 import styled from 'styled-components'
-import { Box, Flex } from 'rebass'
+import { Box } from 'rebass'
 import { Trans } from '@lingui/macro'
 import { XCircle } from 'react-feather'
 import { TYPE } from '../../theme'
-import Column, { AutoColumn, ColumnCenter } from 'components/Column'
+import { ColumnCenter } from 'components/Column'
 
 interface ChartEntry {
   index: number
@@ -36,7 +36,7 @@ const sampleData: Partial<ChartEntry>[] = [
 
 const Wrapper = styled(Box)`
   position: relative;
-  min-height: 150px;
+  height: 250px;
 
   display: grid;
   justify-content: center;
@@ -73,7 +73,7 @@ function useDensityChartData({
 
   useEffect(() => {
     function formatData() {
-      if (!tickData) {
+      if (!tickData?.length) {
         return
       }
 
