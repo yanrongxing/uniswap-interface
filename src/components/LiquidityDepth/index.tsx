@@ -8,6 +8,7 @@ import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 
 export default function LiquidityDepth({
+  price,
   currencyA,
   currencyB,
   feeAmount,
@@ -16,6 +17,7 @@ export default function LiquidityDepth({
   onLeftRangeInput,
   onRightRangeInput,
 }: {
+  price: string | undefined
   currencyA: Currency | undefined
   currencyB: Currency | undefined
   feeAmount: FeeAmount | undefined
@@ -31,6 +33,7 @@ export default function LiquidityDepth({
           <Trans>Liquidity Distribution</Trans>
         </RowBetween>
         <DensityChart
+          price={price}
           currencyA={currencyA}
           currencyB={currencyB}
           feeAmount={feeAmount}

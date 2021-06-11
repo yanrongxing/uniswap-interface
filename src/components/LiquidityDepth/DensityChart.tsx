@@ -59,7 +59,7 @@ function useDensityChartData({
   feeAmount: FeeAmount | undefined
 }) {
   const [formattedData, setFormattedData] = useState<ChartEntry[] | undefined>()
-  const [currentPrice, setCurrentPrice] = useState<number | undefined>()
+  const [priceAtActiveTick, setPriceAtActiveTick] = useState<number | undefined>()
   const [maxLiquidity, setMaxLiquidity] = useState<number>(0)
 
   const { loading, syncing, error, activeTick, tickData } = usePoolTickData(currencyA, currencyB, feeAmount)
@@ -97,7 +97,7 @@ function useDensityChartData({
         }
 
         if (active) {
-          setCurrentPrice(chartEntry.price0)
+          setPriceAtActiveTick(chartEntry.price0)
         }
 
         newData.push(chartEntry)
@@ -119,13 +119,14 @@ function useDensityChartData({
     loading,
     syncing,
     error,
-    currentPrice,
+    priceAtActiveTick,
     maxLiquidity,
     formattedData,
   }
 }
 
 export default function DensityChart({
+  price,
   currencyA,
   currencyB,
   feeAmount,
@@ -134,6 +135,7 @@ export default function DensityChart({
   onLeftRangeInput,
   onRightRangeInput,
 }: {
+  price: string | undefined
   currencyA: Currency | undefined
   currencyB: Currency | undefined
   feeAmount?: number
@@ -147,7 +149,7 @@ export default function DensityChart({
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
 
-  const { loading, syncing, currentPrice, maxLiquidity, formattedData } = useDensityChartData({
+  const { loading, syncing, priceAtActiveTick, maxLiquidity, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
     feeAmount,
@@ -224,27 +226,30 @@ export default function DensityChart({
             y={'activeLiquidity'}
           />
 
-          <VictoryLine
-            data={
-              maxLiquidity && currentPrice
-                ? [
-                    { x: currentPrice, y: 0 },
-                    { x: currentPrice, y: maxLiquidity },
-                  ]
-                : []
-            }
-            labels={({ datum }) => (datum.y !== 0 ? parseFloat(datum.x).toFixed(2) : '')}
-            labelComponent={
-              <VictoryLabel
-                renderInPortal
-                dy={-20}
-                style={{ fill: theme.primaryText1, fontWeight: 500, fontSize: 15 }}
-              />
-            }
-            style={{
-              data: { stroke: theme.secondary1 },
-            }}
-          />
+          {/* Plot at `priceAtActiveTick` to put on same axis as VictoryBar, but display `price` as label */}
+          {price && (
+            <VictoryLine
+              data={
+                maxLiquidity && priceAtActiveTick
+                  ? [
+                      { x: priceAtActiveTick, y: 0 },
+                      { x: priceAtActiveTick, y: maxLiquidity },
+                    ]
+                  : []
+              }
+              labels={({ datum }) => (datum.y !== 0 ? price : '')}
+              labelComponent={
+                <VictoryLabel
+                  renderInPortal
+                  dy={-20}
+                  style={{ fill: theme.primaryText1, fontWeight: 500, fontSize: 15 }}
+                />
+              }
+              style={{
+                data: { stroke: theme.secondary1 },
+              }}
+            />
+          )}
 
           <VictoryAxis
             fixLabelOverlap={true}
