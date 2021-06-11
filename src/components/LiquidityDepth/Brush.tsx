@@ -9,7 +9,7 @@ interface BrushProps extends SVGProps<SVGRectElement> {
 // need to move the head by -18px
 const LEFT_HEAD_OFFSET = 18
 
-export default function Brush({ x, y, width, height, leftHandleColor, rightHandleColor, allowDrag }: BrushProps) {
+export function Brush({ x, y, width, height, leftHandleColor, rightHandleColor, allowDrag }: BrushProps) {
   if (!(x && y && width && height)) return null
 
   x = Number(x)

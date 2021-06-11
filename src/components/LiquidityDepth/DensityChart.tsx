@@ -4,7 +4,7 @@ import useTheme from 'hooks/useTheme'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { useColor } from 'hooks/useColor'
-import Brush from './Brush'
+import { Brush } from './Brush'
 import JSBI from 'jsbi'
 import { usePoolTickData, PRICE_FIXED_DIGITS } from 'hooks/usePoolTickData'
 import { TickProcessed } from 'constants/ticks'
@@ -192,6 +192,7 @@ export default function DensityChart({
               allowDrag={Boolean(formattedData?.length)}
               allowResize={Boolean(formattedData?.length)}
               brushDimension="x"
+              handleWidth={40}
               brushDomain={
                 leftPrice && rightPrice
                   ? {
@@ -201,12 +202,11 @@ export default function DensityChart({
               }
               brushComponent={
                 <Brush
-                  leftHandleColor={currencyA ? tokenAColor : '#607BEE'}
-                  rightHandleColor={currencyB ? tokenBColor : '#F3B71E'}
+                  leftHandleColor={currencyA ? tokenAColor : theme.primary1}
+                  rightHandleColor={currencyB ? tokenBColor : theme.secondary1}
                   allowDrag={Boolean(formattedData?.length)}
                 />
               }
-              handleWidth={40}
               onBrushDomainChangeEnd={(domain) => {
                 const leftRangeValue = Number(domain.x[0])
                 const rightRangeValue = Number(domain.x[1])
