@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { VictoryBar, VictoryLine, VictoryBrushContainer, VictoryAxis, VictoryChart } from 'victory'
+import { VictoryBar, VictoryLine, VictoryBrushContainer, VictoryAxis, VictoryChart, VictoryLabel } from 'victory'
 import useTheme from 'hooks/useTheme'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
@@ -187,8 +187,8 @@ export default function DensityChart({
           height={275}
           padding={40}
           containerComponent={
-            // add allowDraw={false} when library supports it
             <VictoryBrushContainer
+              allowDraw={false}
               allowDrag={Boolean(formattedData?.length)}
               allowResize={Boolean(formattedData?.length)}
               brushDimension="x"
@@ -233,13 +233,20 @@ export default function DensityChart({
                   ]
                 : []
             }
+            labels={({ datum }) => (datum.y !== 0 ? parseFloat(datum.x).toFixed(2) : '')}
+            labelComponent={
+              <VictoryLabel
+                renderInPortal
+                dy={-20}
+                style={{ fill: theme.primaryText1, fontWeight: 500, fontSize: 15 }}
+              />
+            }
             style={{
               data: { stroke: theme.secondary1 },
             }}
           />
 
           <VictoryAxis
-            padding={20}
             fixLabelOverlap={true}
             style={{
               tickLabels: {
