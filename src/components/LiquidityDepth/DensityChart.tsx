@@ -4,7 +4,6 @@ import useTheme from 'hooks/useTheme'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { useColor } from 'hooks/useColor'
 import { Brush } from './Brush'
-import { PRICE_FIXED_DIGITS } from 'hooks/usePoolTickData'
 import Loader from 'components/Loader'
 import styled from 'styled-components'
 import { Box } from 'rebass'
@@ -127,8 +126,8 @@ export default function DensityChart({
                 const leftRangeValue = Number(domain.x[0])
                 const rightRangeValue = Number(domain.x[1])
 
-                leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(PRICE_FIXED_DIGITS))
-                rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(PRICE_FIXED_DIGITS))
+                leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(2))
+                rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(2))
               }}
             />
           }

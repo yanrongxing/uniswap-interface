@@ -6,9 +6,7 @@ import { PoolState, usePool } from './usePools'
 import { useTicks } from './useTicks'
 import { useMemo } from 'react'
 import { TickProcessed } from 'constants/ticks'
-import computeSurroundingTicks from 'utils/computeSurroundingTicks'
-
-export const PRICE_FIXED_DIGITS = 4
+import computeSurroundingTicks, { PRICE_FIXED_DIGITS } from 'utils/computeSurroundingTicks'
 
 const DEFAULT_SURROUNDING_TICKS = {
   [FeeAmount.LOW]: 2_250,

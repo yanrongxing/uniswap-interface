@@ -4,7 +4,7 @@ import { TickMath, tickToPrice } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { TickProcessed } from 'constants/ticks'
 
-const PRICE_FIXED_DIGITS = 4
+export const PRICE_FIXED_DIGITS = 8
 
 // Computes the numSurroundingTicks above or below the active tick.
 export default function computeSurroundingTicks(
