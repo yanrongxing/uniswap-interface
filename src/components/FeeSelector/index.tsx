@@ -7,7 +7,7 @@ import { TYPE } from 'theme'
 import { RowBetween } from 'components/Row'
 import { ButtonRadioChecked } from 'components/Button'
 import styled from 'styled-components/macro'
-import { skipToken } from '@reduxjs/toolkit/dist/query'
+import { skipToken } from '@reduxjs/toolkit/query/react'
 import Badge from 'components/Badge'
 import { useGetFeeTierDistributionQuery } from 'state/data/slice'
 
