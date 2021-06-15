@@ -15,7 +15,7 @@ export interface LiquidityByPositions {
   }
 }
 
-export interface FeeTierUsage {
+export interface FeeTierDistribution {
   [FeeAmount.LOW]: number
   [FeeAmount.MEDIUM]: number
   [FeeAmount.HIGH]: number

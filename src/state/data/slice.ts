@@ -3,7 +3,7 @@ import { gql } from 'graphql-request'
 import { FeeAmount } from '@uniswap/v3-sdk'
 
 import { graphqlBaseQuery, UNISWAP_V3_GRAPH_URL } from './common'
-import { FeeTierUsage, LiquidityByPositions } from './types'
+import { FeeTierDistribution, LiquidityByPositions } from './types'
 
 export const dataApi = createApi({
   reducerPath: 'dataApi',
@@ -11,7 +11,7 @@ export const dataApi = createApi({
     baseUrl: UNISWAP_V3_GRAPH_URL,
   }),
   endpoints: (builder) => ({
-    getFeeTiersForPair: builder.query<FeeTierUsage, { token0: string; token1: string }>({
+    getFeeTierDistribution: builder.query<FeeTierDistribution, { token0: string; token1: string }>({
       query: ({ token0, token1 }) => ({
         document: gql`
           query positions($token0: Bytes!, $token1: Bytes!) {
@@ -50,7 +50,7 @@ export const dataApi = createApi({
           sum += liquidity
         })
 
-        const res = {
+        const res: FeeTierDistribution = {
           [FeeAmount.LOW]: byFeeTier[FeeAmount.LOW] / sum,
           [FeeAmount.MEDIUM]: byFeeTier[FeeAmount.MEDIUM] / sum,
           [FeeAmount.HIGH]: byFeeTier[FeeAmount.HIGH] / sum,
@@ -62,4 +62,4 @@ export const dataApi = createApi({
   }),
 })
 
-export const { useGetFeeTiersForPairQuery } = dataApi
+export const { useGetFeeTierDistributionQuery } = dataApi

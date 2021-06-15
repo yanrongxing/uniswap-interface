@@ -7,9 +7,9 @@ import { TYPE } from 'theme'
 import { RowBetween } from 'components/Row'
 import { ButtonRadioChecked } from 'components/Button'
 import styled from 'styled-components/macro'
-import { useGetFeeTiersForPairQuery } from 'state/data/slice'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import Badge from 'components/Badge'
+import { useGetFeeTierDistributionQuery } from 'state/data/slice'
 
 const ResponsiveText = styled(TYPE.label)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -40,8 +40,9 @@ export default function FeeSelector({
   token0?: string | undefined
   token1?: string | undefined
 }) {
-  const { isLoading, isError, data } = useGetFeeTiersForPairQuery(token0 && token1 ? { token0, token1 } : skipToken)
+  const { isLoading, isError, data } = useGetFeeTierDistributionQuery(token0 && token1 ? { token0, token1 } : skipToken)
 
+  // in case of loading or error, we can ignore the query
   const feeTierPercentages =
     !isLoading && !isError && data
       ? {
