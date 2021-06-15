@@ -7,6 +7,8 @@ import { TYPE } from 'theme'
 import { RowBetween } from 'components/Row'
 import { ButtonRadioChecked } from 'components/Button'
 import styled from 'styled-components/macro'
+import { useGetFeeTiersForPairQuery } from 'state/data/slice'
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 
 const ResponsiveText = styled(TYPE.label)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -18,11 +20,17 @@ export default function FeeSelector({
   disabled = false,
   feeAmount,
   handleFeePoolSelect,
+  token0,
+  token1,
 }: {
   disabled?: boolean
   feeAmount?: FeeAmount
   handleFeePoolSelect: (feeAmount: FeeAmount) => void
+  token0?: string | undefined
+  token1?: string | undefined
 }) {
+  const feeTiers = useGetFeeTiersForPairQuery(token0 && token1 ? { token0, token1 } : skipToken)
+
   return (
     <AutoColumn gap="16px">
       <DynamicSection gap="md" disabled={disabled}>

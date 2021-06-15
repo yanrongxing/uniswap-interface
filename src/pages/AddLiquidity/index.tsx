@@ -494,6 +494,8 @@ export default function AddLiquidity({
                   disabled={!currencyB || !currencyA}
                   feeAmount={feeAmount}
                   handleFeePoolSelect={handleFeePoolSelect}
+                  token0={currencyA?.wrapped.address.toLowerCase()}
+                  token1={currencyB?.wrapped.address.toLowerCase()}
                 />
               )}
             </FeeSelectorContainer>
