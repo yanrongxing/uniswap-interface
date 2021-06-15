@@ -9,12 +9,23 @@ import { ButtonRadioChecked } from 'components/Button'
 import styled from 'styled-components/macro'
 import { useGetFeeTiersForPairQuery } from 'state/data/slice'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
+import Badge from 'components/Badge'
 
 const ResponsiveText = styled(TYPE.label)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     font-size: 12px;
   `};
 `
+
+const FeeTierPercentageBadge = ({ percentage }: { percentage: string }) => {
+  return (
+    <Badge>
+      <TYPE.label fontSize={12}>
+        <Trans>{percentage}% select</Trans>
+      </TYPE.label>
+    </Badge>
+  )
+}
 
 export default function FeeSelector({
   disabled = false,
@@ -29,7 +40,16 @@ export default function FeeSelector({
   token0?: string | undefined
   token1?: string | undefined
 }) {
-  const feeTiers = useGetFeeTiersForPairQuery(token0 && token1 ? { token0, token1 } : skipToken)
+  const { isLoading, isError, data } = useGetFeeTiersForPairQuery(token0 && token1 ? { token0, token1 } : skipToken)
+
+  const feeTierPercentages =
+    !isLoading && !isError && data
+      ? {
+          [FeeAmount.LOW]: (data[FeeAmount.LOW] * 100).toFixed(0),
+          [FeeAmount.MEDIUM]: (data[FeeAmount.MEDIUM] * 100).toFixed(0),
+          [FeeAmount.HIGH]: (data[FeeAmount.HIGH] * 100).toFixed(0),
+        }
+      : undefined
 
   return (
     <AutoColumn gap="16px">
@@ -53,6 +73,8 @@ export default function FeeSelector({
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
                 <Trans>Best for stable pairs.</Trans>
               </TYPE.main>
+
+              {feeTierPercentages && <FeeTierPercentageBadge percentage={feeTierPercentages[FeeAmount.LOW]} />}
             </AutoColumn>
           </ButtonRadioChecked>
           <ButtonRadioChecked
@@ -67,6 +89,8 @@ export default function FeeSelector({
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
                 <Trans>Best for most pairs.</Trans>
               </TYPE.main>
+
+              {feeTierPercentages && <FeeTierPercentageBadge percentage={feeTierPercentages[FeeAmount.MEDIUM]} />}
             </AutoColumn>
           </ButtonRadioChecked>
           <ButtonRadioChecked
@@ -81,6 +105,8 @@ export default function FeeSelector({
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
                 <Trans>Best for exotic pairs.</Trans>
               </TYPE.main>
+
+              {feeTierPercentages && <FeeTierPercentageBadge percentage={feeTierPercentages[FeeAmount.HIGH]} />}
             </AutoColumn>
           </ButtonRadioChecked>
         </RowBetween>
