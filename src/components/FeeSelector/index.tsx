@@ -21,7 +21,7 @@ const FeeTierPercentageBadge = ({ percentage }: { percentage: string }) => {
   return (
     <Badge>
       <TYPE.label fontSize={12}>
-        <Trans>{percentage}% select</Trans>
+        {percentage === '0' ? <Trans>Not created</Trans> : <Trans>{percentage}% select</Trans>}
       </TYPE.label>
     </Badge>
   )
