@@ -51,9 +51,9 @@ export const dataApi = createApi({
         })
 
         const res: FeeTierDistribution = {
-          [FeeAmount.LOW]: byFeeTier[FeeAmount.LOW] / sum,
-          [FeeAmount.MEDIUM]: byFeeTier[FeeAmount.MEDIUM] / sum,
-          [FeeAmount.HIGH]: byFeeTier[FeeAmount.HIGH] / sum,
+          [FeeAmount.LOW]: byFeeTier[FeeAmount.LOW] / sum || 0,
+          [FeeAmount.MEDIUM]: byFeeTier[FeeAmount.MEDIUM] / sum || 0,
+          [FeeAmount.HIGH]: byFeeTier[FeeAmount.HIGH] / sum || 0,
         }
 
         return res

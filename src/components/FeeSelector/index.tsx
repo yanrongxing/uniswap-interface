@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
@@ -40,17 +40,34 @@ export default function FeeSelector({
   token0?: string | undefined
   token1?: string | undefined
 }) {
-  const { isLoading, isUninitialized, isError, data } = useGetFeeTierDistributionQuery(
-    token0 && token1 ? { token0, token1 } : skipToken
-  )
+  const {
+    isLoading,
+    isUninitialized,
+    isError,
+    data: distributions,
+  } = useGetFeeTierDistributionQuery(token0 && token1 ? { token0, token1 } : skipToken)
+
+  // auto-select fee tier when available
+  useEffect(() => {
+    if (!isLoading && !isUninitialized && !isError && distributions) {
+      const largestUsageFeeTier = Object.keys(distributions)
+        .map((d) => Number(d))
+        .filter((d: FeeAmount) => distributions[d] !== 0)
+        .reduce((a: FeeAmount, b: FeeAmount) => (distributions[a] > distributions[b] ? a : b), -1)
+
+      if (largestUsageFeeTier !== -1) {
+        handleFeePoolSelect(largestUsageFeeTier)
+      }
+    }
+  }, [isLoading, isUninitialized, isError, distributions, handleFeePoolSelect])
 
   // in case of loading or error, we can ignore the query
   const feeTierPercentages =
-    !isLoading && !isUninitialized && !isError && data
+    !isLoading && !isUninitialized && !isError && distributions
       ? {
-          [FeeAmount.LOW]: (data[FeeAmount.LOW] * 100).toFixed(0),
-          [FeeAmount.MEDIUM]: (data[FeeAmount.MEDIUM] * 100).toFixed(0),
-          [FeeAmount.HIGH]: (data[FeeAmount.HIGH] * 100).toFixed(0),
+          [FeeAmount.LOW]: (distributions[FeeAmount.LOW] * 100).toFixed(0),
+          [FeeAmount.MEDIUM]: (distributions[FeeAmount.MEDIUM] * 100).toFixed(0),
+          [FeeAmount.HIGH]: (distributions[FeeAmount.HIGH] * 100).toFixed(0),
         }
       : undefined
 
