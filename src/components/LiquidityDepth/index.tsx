@@ -3,7 +3,6 @@ import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { DarkBlueCard } from 'components/Card'
 import DensityChart from './DensityChart'
-import PriceChart from './PriceChart'
 import { RowBetween } from 'components/Row'
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
@@ -43,8 +42,6 @@ export default function LiquidityDepth({
           onLeftRangeInput={onLeftRangeInput}
           onRightRangeInput={onRightRangeInput}
         />
-
-        <PriceChart currencyA={currencyA} currencyB={currencyB} feeAmount={feeAmount} />
       </AutoColumn>
     </DarkBlueCard>
   )
