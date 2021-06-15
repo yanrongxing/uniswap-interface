@@ -40,11 +40,13 @@ export default function FeeSelector({
   token0?: string | undefined
   token1?: string | undefined
 }) {
-  const { isLoading, isError, data } = useGetFeeTierDistributionQuery(token0 && token1 ? { token0, token1 } : skipToken)
+  const { isLoading, isUninitialized, isError, data } = useGetFeeTierDistributionQuery(
+    token0 && token1 ? { token0, token1 } : skipToken
+  )
 
   // in case of loading or error, we can ignore the query
   const feeTierPercentages =
-    !isLoading && !isError && data
+    !isLoading && !isUninitialized && !isError && data
       ? {
           [FeeAmount.LOW]: (data[FeeAmount.LOW] * 100).toFixed(0),
           [FeeAmount.MEDIUM]: (data[FeeAmount.MEDIUM] * 100).toFixed(0),
