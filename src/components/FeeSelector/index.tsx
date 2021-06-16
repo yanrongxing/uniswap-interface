@@ -68,7 +68,7 @@ export default function FeeSelector({
 
   useEffect(() => {
     setShowOptions(false)
-  }, [token0, token1, feeAmount])
+  }, [token0, token1])
 
   useEffect(() => {
     if (isError) {
