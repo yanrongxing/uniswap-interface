@@ -107,7 +107,6 @@ export default function DensityChart({
           height={275}
           padding={40}
           minDomain={{ y: 0 }}
-          minDomain={{ y: 0 }}
           containerComponent={
             <VictoryBrushContainer
               allowDraw={false}
