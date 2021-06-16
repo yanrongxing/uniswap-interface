@@ -44,14 +44,6 @@ import {
   ScrollablePage,
   ResponsiveTwoColumns,
   Separator,
-<<<<<<< HEAD
-  PairContainer,
-  FeeSelectorContainer,
-  DepositContainer,
-  RangeSelectorContainer,
-  ButtonsContainer,
-=======
->>>>>>> judo/improved-add-liquidity
   PageWrapper,
 } from './styled'
 import { Trans, t } from '@lingui/macro'
@@ -72,10 +64,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import HoverInlineText from 'components/HoverInlineText'
 import LiquidityDepth from 'components/LiquidityDepth'
-<<<<<<< HEAD
-=======
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
->>>>>>> judo/improved-add-liquidity
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -399,161 +388,6 @@ export default function AddLiquidity({
   const showApprovalB =
     !argentWalletContract && approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
 
-<<<<<<< HEAD
-  return (
-    <ScrollablePage>
-      <TransactionConfirmationModal
-        isOpen={showConfirm}
-        onDismiss={handleDismissConfirmation}
-        attemptingTxn={attemptingTxn}
-        hash={txHash}
-        content={() => (
-          <ConfirmationModalContent
-            title={'Add Liquidity'}
-            onDismiss={handleDismissConfirmation}
-            topContent={() => (
-              <Review
-                parsedAmounts={parsedAmounts}
-                position={position}
-                existingPosition={existingPosition}
-                priceLower={priceLower}
-                priceUpper={priceUpper}
-                outOfRange={outOfRange}
-              />
-            )}
-            bottomContent={() => (
-              <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
-                <Text fontWeight={500} fontSize={20}>
-                  <Trans>Add</Trans>
-                </Text>
-              </ButtonPrimary>
-            )}
-          />
-        )}
-        pendingText={pendingText}
-      />
-      <PageWrapper>
-        <AddRemoveTabs
-          creating={false}
-          adding={true}
-          positionID={tokenId}
-          defaultSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
-        />
-        <Wrapper>
-          <ResponsiveTwoColumns>
-            <PairContainer>
-              {!hasExistingPosition && (
-                <>
-                  <AutoColumn gap="md">
-                    <RowBetween paddingBottom="20px">
-                      <TYPE.label>
-                        <Trans>Select Pair</Trans>
-                      </TYPE.label>
-                      <ButtonText onClick={clearAll}>
-                        <TYPE.blue fontSize="12px">
-                          <Trans>Clear All</Trans>
-                        </TYPE.blue>
-                      </ButtonText>
-                    </RowBetween>
-                    <RowBetween>
-                      <CurrencyDropdown
-                        value={formattedAmounts[Field.CURRENCY_A]}
-                        onUserInput={onFieldAInput}
-                        hideInput={true}
-                        onMax={() => {
-                          onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-                        }}
-                        onCurrencySelect={handleCurrencyASelect}
-                        showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-                        currency={currencies[Field.CURRENCY_A]}
-                        id="add-liquidity-input-tokena"
-                        showCommonBases
-                      />
-                      <div style={{ width: '12px' }} />
-
-                      <CurrencyDropdown
-                        value={formattedAmounts[Field.CURRENCY_B]}
-                        hideInput={true}
-                        onUserInput={onFieldBInput}
-                        onCurrencySelect={handleCurrencyBSelect}
-                        onMax={() => {
-                          onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
-                        }}
-                        showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                        currency={currencies[Field.CURRENCY_B]}
-                        id="add-liquidity-input-tokenb"
-                        showCommonBases
-                      />
-                    </RowBetween>
-                  </AutoColumn>{' '}
-                </>
-              )}
-            </PairContainer>
-
-            <FeeSelectorContainer>
-              {hasExistingPosition && existingPosition ? (
-                <PositionPreview
-                  position={existingPosition}
-                  title={<Trans>Selected Range</Trans>}
-                  inRange={!outOfRange}
-                />
-              ) : (
-                <FeeSelector
-                  disabled={!currencyB || !currencyA}
-                  feeAmount={feeAmount}
-                  handleFeePoolSelect={handleFeePoolSelect}
-                  token0={currencyA?.wrapped.address.toLowerCase()}
-                  token1={currencyB?.wrapped.address.toLowerCase()}
-                />
-              )}
-            </FeeSelectorContainer>
-
-            <DepositContainer>
-              <DynamicSection
-                disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}
-              >
-                <AutoColumn gap="md">
-                  <TYPE.label>
-                    {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit Amounts</Trans>}
-                  </TYPE.label>
-
-                  <CurrencyInputPanel
-                    value={formattedAmounts[Field.CURRENCY_A]}
-                    onUserInput={onFieldAInput}
-                    onMax={() => {
-                      onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-                    }}
-                    showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-                    currency={currencies[Field.CURRENCY_A]}
-                    id="add-liquidity-input-tokena"
-                    fiatValue={usdcValues[Field.CURRENCY_A]}
-                    showCommonBases
-                    locked={depositADisabled}
-                  />
-
-                  <CurrencyInputPanel
-                    value={formattedAmounts[Field.CURRENCY_B]}
-                    onUserInput={onFieldBInput}
-                    onMax={() => {
-                      onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
-                    }}
-                    showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                    fiatValue={usdcValues[Field.CURRENCY_B]}
-                    currency={currencies[Field.CURRENCY_B]}
-                    id="add-liquidity-input-tokenb"
-                    showCommonBases
-                    locked={depositBDisabled}
-                  />
-                </AutoColumn>
-              </DynamicSection>
-            </DepositContainer>
-
-            <Separator />
-
-            {!hasExistingPosition && (
-              <RangeSelectorContainer gap="12px">
-                {noLiquidity && (
-=======
   const DepositAmounts = () => (
     <DynamicSection disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}>
       <AutoColumn gap="md">
@@ -705,7 +539,6 @@ export default function AddLiquidity({
 
               <AutoColumn gap="lg" style={{ gridAutoRows: 'min-content' }}>
                 {!hasExistingPosition && noLiquidity && (
->>>>>>> judo/improved-add-liquidity
                   <DynamicSection disabled={!currencyA || !currencyB}>
                     <AutoColumn gap="md">
                       <RowBetween>
@@ -893,92 +726,6 @@ export default function AddLiquidity({
                     </YellowCard>
                   ) : null}
                 </DynamicSection>
-<<<<<<< HEAD
-              </RangeSelectorContainer>
-            )}
-
-            <ButtonsContainer>
-              {addIsUnsupported ? (
-                <ButtonPrimary disabled={true} borderRadius="12px" padding={'12px'}>
-                  <TYPE.main mb="4px">
-                    <Trans>Unsupported Asset</Trans>
-                  </TYPE.main>
-                </ButtonPrimary>
-              ) : !account ? (
-                <ButtonLight onClick={toggleWalletModal} borderRadius="12px" padding={'12px'}>
-                  <Trans>Connect wallet</Trans>
-                </ButtonLight>
-              ) : (
-                <AutoColumn gap={'md'}>
-                  {(approvalA === ApprovalState.NOT_APPROVED ||
-                    approvalA === ApprovalState.PENDING ||
-                    approvalB === ApprovalState.NOT_APPROVED ||
-                    approvalB === ApprovalState.PENDING) &&
-                    isValid && (
-                      <RowBetween>
-                        {showApprovalA && (
-                          <ButtonPrimary
-                            borderRadius="12px"
-                            padding={'12px'}
-                            onClick={approveACallback}
-                            disabled={approvalA === ApprovalState.PENDING}
-                            width={showApprovalB ? '48%' : '100%'}
-                          >
-                            {approvalA === ApprovalState.PENDING ? (
-                              <Dots>
-                                <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
-                              </Dots>
-                            ) : (
-                              <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
-                            )}
-                          </ButtonPrimary>
-                        )}
-                        {showApprovalB && (
-                          <ButtonPrimary
-                            borderRadius="12px"
-                            padding={'12px'}
-                            onClick={approveBCallback}
-                            disabled={approvalB === ApprovalState.PENDING}
-                            width={showApprovalA ? '48%' : '100%'}
-                          >
-                            {approvalB === ApprovalState.PENDING ? (
-                              <Dots>
-                                <Trans>Approving {currencies[Field.CURRENCY_B]?.symbol}</Trans>
-                              </Dots>
-                            ) : (
-                              <Trans>Approve {currencies[Field.CURRENCY_B]?.symbol}</Trans>
-                            )}
-                          </ButtonPrimary>
-                        )}
-                      </RowBetween>
-                    )}
-                  <ButtonError
-                    onClick={() => {
-                      expertMode ? onAdd() : setShowConfirm(true)
-                    }}
-                    disabled={
-                      !isValid ||
-                      (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled) ||
-                      (!argentWalletContract && approvalB !== ApprovalState.APPROVED && !depositBDisabled)
-                    }
-                    error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
-                  >
-                    <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
-                  </ButtonError>
-                </AutoColumn>
-              )}
-            </ButtonsContainer>
-          </ResponsiveTwoColumns>
-        </Wrapper>
-      </PageWrapper>
-      {addIsUnsupported && (
-        <UnsupportedCurrencyFooter
-          show={addIsUnsupported}
-          currencies={[currencies.CURRENCY_A, currencies.CURRENCY_B]}
-        />
-      )}
-    </ScrollablePage>
-=======
 
                 <MediumOnly>
                   <DepositAmounts />
@@ -1062,6 +809,5 @@ export default function AddLiquidity({
       </ScrollablePage>
       <SwitchLocaleLink />
     </>
->>>>>>> judo/improved-add-liquidity
   )
 }

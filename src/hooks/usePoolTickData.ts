@@ -6,7 +6,7 @@ import { PoolState, usePool } from './usePools'
 import { useAllV3Ticks } from './useAllV3Ticks'
 import { useMemo } from 'react'
 import { TickProcessed } from 'constants/ticks'
-import computeSurroundingTicks, { PRICE_FIXED_DIGITS } from 'utils/computeSurroundingTicks'
+import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
 const PRICE_FIXED_DIGITS = 8
 
