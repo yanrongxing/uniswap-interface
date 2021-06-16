@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
@@ -31,9 +31,9 @@ export function useDensityChartData({
   // clear data when inputs are cleared
   useEffect(() => {
     if (!currencyA || !currencyB || !feeAmount) {
-      setFormattedData([])
+      setFormattedData(undefined)
     }
-  }, [currencyA, currencyB, feeAmount, setFormattedData])
+  }, [currencyA, currencyB, feeAmount])
 
   useEffect(() => {
     function formatData() {

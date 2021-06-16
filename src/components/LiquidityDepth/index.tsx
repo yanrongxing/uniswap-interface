@@ -16,6 +16,7 @@ export default function LiquidityDepth({
   priceUpper,
   onLeftRangeInput,
   onRightRangeInput,
+  interactive,
 }: {
   price: string | undefined
   currencyA: Currency | undefined
@@ -25,6 +26,7 @@ export default function LiquidityDepth({
   priceUpper?: Price<Token, Token>
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
+  interactive: boolean
 }) {
   return (
     <DarkBlueCard>
@@ -41,6 +43,7 @@ export default function LiquidityDepth({
           priceUpper={priceUpper}
           onLeftRangeInput={onLeftRangeInput}
           onRightRangeInput={onRightRangeInput}
+          interactive={interactive}
         />
       </AutoColumn>
     </DarkBlueCard>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { VictoryBar, VictoryLine, VictoryBrushContainer, VictoryAxis, VictoryChart, VictoryLabel } from 'victory'
 import useTheme from 'hooks/useTheme'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
@@ -47,6 +47,7 @@ export default function DensityChart({
   priceUpper,
   onLeftRangeInput,
   onRightRangeInput,
+  interactive,
 }: {
   price: string | undefined
   currencyA: Currency | undefined
@@ -56,6 +57,7 @@ export default function DensityChart({
   priceUpper?: Price<Token, Token>
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
+  interactive: boolean
 }) {
   const theme = useTheme()
 
@@ -81,6 +83,8 @@ export default function DensityChart({
     )
   }
 
+  interactive = interactive && Boolean(formattedData?.length)
+
   return (
     <Wrapper>
       {syncing ? (
@@ -89,7 +93,8 @@ export default function DensityChart({
         </SyncingIndicator>
       ) : null}
 
-      {formattedData && formattedData?.length === 0 ? (
+      {/* formatted === undefined will show sample data */}
+      {formattedData === [] ? (
         <ColumnCenter>
           <XCircle stroke={theme.text4} />
           <TYPE.darkGray padding={10}>
@@ -101,13 +106,15 @@ export default function DensityChart({
           animate={{ duration: 500, easing: 'cubic' }}
           height={275}
           padding={40}
+          minDomain={{ y: 0 }}
+          minDomain={{ y: 0 }}
           containerComponent={
             <VictoryBrushContainer
               allowDraw={false}
-              allowDrag={Boolean(formattedData?.length)}
-              allowResize={Boolean(formattedData?.length)}
+              allowDrag={interactive}
+              allowResize={interactive}
               brushDimension="x"
-              handleWidth={40}
+              handleWidth={40 /* handle width must be as large as handle head */}
               brushDomain={
                 leftPrice && rightPrice
                   ? {
@@ -119,30 +126,31 @@ export default function DensityChart({
                 <Brush
                   leftHandleColor={currencyA ? tokenAColor : theme.primary1}
                   rightHandleColor={currencyB ? tokenBColor : theme.secondary1}
-                  allowDrag={Boolean(formattedData?.length)}
+                  allowDrag={interactive}
                 />
               }
               onBrushDomainChangeEnd={(domain) => {
                 const leftRangeValue = Number(domain.x[0])
                 const rightRangeValue = Number(domain.x[1])
 
-                leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(2))
-                rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(2))
+                // simulate user input for auto-formatting and other validations
+                leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
+                rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
               }}
             />
           }
         >
           <VictoryBar
             data={formattedData ? formattedData : sampleData}
-            style={{ data: { stroke: theme.blue1, fill: theme.blue1, opacity: '0.2' } }}
+            style={{ data: { stroke: theme.blue1, fill: theme.blue1, opacity: '0.5' } }}
             x={'price0'}
             y={'activeLiquidity'}
           />
 
-          {/* Plot at `priceAtActiveTick` to put on same axis as VictoryBar, but display `price` as label */}
           {price && (
             <VictoryLine
               data={
+                /* plot at `priceAtActiveTick` to put on same axis as VictoryBar, but display `price` as label */
                 maxLiquidity && priceAtActiveTick
                   ? [
                       { x: priceAtActiveTick, y: 0 },
@@ -154,7 +162,7 @@ export default function DensityChart({
               labelComponent={
                 <VictoryLabel
                   renderInPortal
-                  dy={-20}
+                  dy={-10}
                   style={{ fill: theme.primaryText1, fontWeight: 500, fontSize: 15 }}
                 />
               }

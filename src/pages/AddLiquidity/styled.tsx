@@ -76,50 +76,18 @@ export const StyledInput = styled(Input)`
 
 export const ResponsiveTwoColumns = styled.div`
   display: grid;
-  grid-row-gap: 32px;
-  grid-column-gap: 32px;
+  grid-gap: 32px;
   grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: auto auto 1fr auto;
-  grid-template-areas:
-    'p s r'
-    'f s r'
-    'd s r'
-    '. s b';
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-column-gap: 0px;
     grid-template-columns: auto;
-    grid-template-areas:
-      'p'
-      'f'
-      'r'
-      'd'
-      'b';
   `};
 `
 
-export const PairContainer = styled.div`
-  grid-area: p;
-`
-
-export const FeeSelectorContainer = styled.div`
-  grid-area: f;
-`
-
-export const DepositContainer = styled.div`
-  grid-area: d;
-`
-
-export const RangeSelectorContainer = styled(AutoColumn)`
-  grid-area: r;
-`
-
-export const ButtonsContainer = styled.div`
-  grid-area: b;
-`
-
 export const Separator = styled.div`
-  grid-area: s;
-
   border: ${({ theme }) => `1px solid ${theme.bg3}`};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
 `

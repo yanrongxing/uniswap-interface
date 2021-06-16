@@ -3,10 +3,12 @@ import { FeeAmount, nearestUsableTick, TickMath, tickToPrice, TICK_SPACINGS } fr
 import keyBy from 'lodash.keyby'
 import JSBI from 'jsbi'
 import { PoolState, usePool } from './usePools'
-import { useTicks } from './useTicks'
+import { useAllV3Ticks } from './useAllV3Ticks'
 import { useMemo } from 'react'
 import { TickProcessed } from 'constants/ticks'
 import computeSurroundingTicks, { PRICE_FIXED_DIGITS } from 'utils/computeSurroundingTicks'
+
+const PRICE_FIXED_DIGITS = 8
 
 const DEFAULT_SURROUNDING_TICKS = {
   [FeeAmount.LOW]: 2_250,
@@ -39,13 +41,7 @@ export function usePoolTickData(
   const activeTick =
     pool[1]?.tickCurrent && tickSpacing ? nearestUsableTick(pool[1]?.tickCurrent, tickSpacing) : undefined
 
-  const { loading, syncing, error, valid, tickData } = useTicks(
-    currencyA,
-    currencyB,
-    feeAmount,
-    activeTick,
-    numSurroundingTicks
-  )
+  const { loading, syncing, error, valid, tickData } = useAllV3Ticks(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
 
   const token0 = currencyA?.wrapped
   const token1 = currencyB?.wrapped
