@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { DynamicSection } from 'pages/AddLiquidity/styled'
@@ -54,8 +55,8 @@ export default function FeeSelector({
   disabled?: boolean
   feeAmount?: FeeAmount
   handleFeePoolSelect: (feeAmount: FeeAmount) => void
-  token0?: string | undefined
-  token1?: string | undefined
+  token0?: Token | undefined
+  token1?: Token | undefined
 }) {
   const [showOptions, setShowOptions] = useState(false)
 
@@ -64,7 +65,11 @@ export default function FeeSelector({
     isUninitialized,
     isError,
     data: distributions,
-  } = useGetFeeTierDistributionQuery(token0 && token1 ? { token0, token1 } : skipToken)
+  } = useGetFeeTierDistributionQuery(
+    token0 && token1
+      ? { token0: token0.address.toString().toLowerCase(), token1: token1.address.toString().toLowerCase() }
+      : skipToken
+  )
 
   useEffect(() => {
     setShowOptions(false)

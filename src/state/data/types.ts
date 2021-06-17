@@ -1,18 +1,16 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 
-export interface LiquidityByPositions {
+export interface PoolTVL {
   asToken0: {
-    pool: {
-      feeTier: FeeAmount
-    }
-    liquidity: number
+    feeTier: FeeAmount
+    totalValueLockedToken0: number
+    totalValueLockedToken1: number
   }[]
   asToken1: {
-    pool: {
-      feeTier: FeeAmount
-    }
-    liquidity: number
-  }
+    feeTier: FeeAmount
+    totalValueLockedToken0: number
+    totalValueLockedToken1: number
+  }[]
 }
 
 export interface FeeTierDistribution {
