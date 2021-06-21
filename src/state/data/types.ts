@@ -14,7 +14,7 @@ export interface PoolTVL {
 }
 
 export interface FeeTierDistribution {
-  [FeeAmount.LOW]: number
-  [FeeAmount.MEDIUM]: number
-  [FeeAmount.HIGH]: number
+  [FeeAmount.LOW]: number | undefined
+  [FeeAmount.MEDIUM]: number | undefined
+  [FeeAmount.HIGH]: number | undefined
 }

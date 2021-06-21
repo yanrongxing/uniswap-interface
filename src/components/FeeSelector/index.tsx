@@ -12,7 +12,6 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import Badge from 'components/Badge'
 import { useGetFeeTierDistributionQuery } from 'state/data/slice'
 import { DarkGreyCard } from 'components/Card'
-import { Dots } from 'pages/Pool/styleds'
 import Loader from 'components/Loader'
 
 const ResponsiveText = styled(TYPE.label)`
@@ -34,16 +33,6 @@ const FeeAmountLabel = {
     label: '1',
     description: <Trans>Best for exotic pairs.</Trans>,
   },
-}
-
-const FeeTierPercentageBadge = ({ percentage }: { percentage: string }) => {
-  return (
-    <Badge>
-      <TYPE.label fontSize={12}>
-        <Trans>{percentage}% select</Trans>
-      </TYPE.label>
-    </Badge>
-  )
 }
 
 function useFeeDistribution(token0: Token | undefined, token1: Token | undefined) {
@@ -68,8 +57,8 @@ function useFeeDistribution(token0: Token | undefined, token1: Token | undefined
 
     const largestUsageFeeTier = Object.keys(distributions)
       .map((d) => Number(d))
-      .filter((d: FeeAmount) => distributions[d] !== 0)
-      .reduce((a: FeeAmount, b: FeeAmount) => (distributions[a] > distributions[b] ? a : b), -1)
+      .filter((d: FeeAmount) => distributions[d] !== 0 && distributions[d] !== undefined)
+      .reduce((a: FeeAmount, b: FeeAmount) => ((distributions[a] ?? 0) > (distributions[b] ?? 0) ? a : b), -1)
 
     return {
       isLoading,
@@ -79,6 +68,16 @@ function useFeeDistribution(token0: Token | undefined, token1: Token | undefined
       largestUsageFeeTier,
     }
   }, [isLoading, isUninitialized, isError, distributions])
+}
+
+const FeeTierPercentageBadge = ({ percentage }: { percentage: string | undefined }) => {
+  return (
+    <Badge>
+      <TYPE.label fontSize={12}>
+        {Boolean(percentage) ? <Trans>{percentage}% select</Trans> : <Trans>Not created</Trans>}
+      </TYPE.label>
+    </Badge>
+  )
 }
 
 export default function FeeSelector({
@@ -123,9 +122,15 @@ export default function FeeSelector({
   const feeTierPercentages =
     !isLoading && !isUninitialized && !isError && distributions
       ? {
-          [FeeAmount.LOW]: (distributions[FeeAmount.LOW] * 100).toFixed(0),
-          [FeeAmount.MEDIUM]: (distributions[FeeAmount.MEDIUM] * 100).toFixed(0),
-          [FeeAmount.HIGH]: (distributions[FeeAmount.HIGH] * 100).toFixed(0),
+          [FeeAmount.LOW]: distributions[FeeAmount.LOW]
+            ? ((distributions[FeeAmount.LOW] ?? 0) * 100).toFixed(0)
+            : undefined,
+          [FeeAmount.MEDIUM]: distributions[FeeAmount.MEDIUM]
+            ? ((distributions[FeeAmount.MEDIUM] ?? 0) * 100).toFixed(0)
+            : undefined,
+          [FeeAmount.HIGH]: distributions[FeeAmount.HIGH]
+            ? ((distributions[FeeAmount.HIGH] ?? 0) * 100).toFixed(0)
+            : undefined,
         }
       : undefined
 
@@ -140,13 +145,9 @@ export default function FeeSelector({
                   <TYPE.label>
                     <Trans>Fee tier</Trans>
                   </TYPE.label>
-                  {isLoading && (
-                    <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                      <Dots>
-                        <Trans>The % you will earn in fees.</Trans>
-                      </Dots>
-                    </TYPE.main>
-                  )}
+                  <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                    <Trans>The % you will earn in fees.</Trans>
+                  </TYPE.main>
                 </>
               ) : (
                 <>
