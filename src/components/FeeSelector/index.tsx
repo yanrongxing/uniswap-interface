@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
@@ -13,6 +13,7 @@ import Badge from 'components/Badge'
 import { useGetFeeTierDistributionQuery } from 'state/data/slice'
 import { DarkGreyCard } from 'components/Card'
 import { Dots } from 'pages/Pool/styleds'
+import Loader from 'components/Loader'
 
 const ResponsiveText = styled(TYPE.label)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -45,6 +46,41 @@ const FeeTierPercentageBadge = ({ percentage }: { percentage: string }) => {
   )
 }
 
+function useFeeDistribution(token0: Token | undefined, token1: Token | undefined) {
+  const {
+    isLoading,
+    isUninitialized,
+    isError,
+    data: distributions,
+  } = useGetFeeTierDistributionQuery(
+    token0 && token1 ? { token0: token0.address.toLowerCase(), token1: token1.address.toLowerCase() } : skipToken
+  )
+
+  // auto-select fee tier when available
+  return useMemo(() => {
+    if (isLoading || isUninitialized || isError || !distributions) {
+      return {
+        isLoading,
+        isUninitialized,
+        isError,
+      }
+    }
+
+    const largestUsageFeeTier = Object.keys(distributions)
+      .map((d) => Number(d))
+      .filter((d: FeeAmount) => distributions[d] !== 0)
+      .reduce((a: FeeAmount, b: FeeAmount) => (distributions[a] > distributions[b] ? a : b), -1)
+
+    return {
+      isLoading,
+      isUninitialized,
+      isError,
+      distributions,
+      largestUsageFeeTier,
+    }
+  }, [isLoading, isUninitialized, isError, distributions])
+}
+
 export default function FeeSelector({
   disabled = false,
   feeAmount,
@@ -60,45 +96,28 @@ export default function FeeSelector({
 }) {
   const [showOptions, setShowOptions] = useState(false)
 
-  const {
-    isLoading,
-    isUninitialized,
-    isError,
-    data: distributions,
-  } = useGetFeeTierDistributionQuery(
-    token0 && token1
-      ? { token0: token0.address.toString().toLowerCase(), token1: token1.address.toString().toLowerCase() }
-      : skipToken
-  )
+  const { isLoading, isUninitialized, isError, distributions, largestUsageFeeTier } = useFeeDistribution(token0, token1)
+
+  useEffect(() => {
+    if (largestUsageFeeTier === undefined) {
+      return
+    }
+
+    if (largestUsageFeeTier === -1) {
+      // cannot recommend, open options
+      setShowOptions(true)
+    }
+
+    handleFeePoolSelect(largestUsageFeeTier)
+  }, [largestUsageFeeTier, handleFeePoolSelect])
 
   useEffect(() => {
     setShowOptions(false)
   }, [token0, token1])
 
   useEffect(() => {
-    if (isError) {
-      setShowOptions(true)
-    }
+    setShowOptions(isError)
   }, [isError])
-
-  // auto-select fee tier when available
-  useEffect(() => {
-    if (isLoading || isUninitialized || isError || !distributions) {
-      return
-    }
-
-    const largestUsageFeeTier = Object.keys(distributions)
-      .map((d) => Number(d))
-      .filter((d: FeeAmount) => distributions[d] !== 0)
-      .reduce((a: FeeAmount, b: FeeAmount) => (distributions[a] > distributions[b] ? a : b), -1)
-
-    if (largestUsageFeeTier === -1) {
-      // cannot recommend, open options
-      setShowOptions(true)
-    } else {
-      handleFeePoolSelect(largestUsageFeeTier)
-    }
-  }, [isLoading, isUninitialized, isError, distributions, handleFeePoolSelect])
 
   // in case of loading or error, we can ignore the query
   const feeTierPercentages =
@@ -119,12 +138,12 @@ export default function FeeSelector({
               {!feeAmount || isLoading || isUninitialized ? (
                 <>
                   <TYPE.label>
-                    <Trans>Select a fee tier</Trans>
+                    <Trans>Fee tier</Trans>
                   </TYPE.label>
                   {isLoading && (
                     <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
                       <Dots>
-                        <Trans>Loading recommendation based on liquidity</Trans>
+                        <Trans>The % you will earn in fees.</Trans>
                       </Dots>
                     </TYPE.main>
                   )}
@@ -142,9 +161,13 @@ export default function FeeSelector({
               )}
             </AutoColumn>
 
-            <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" borderRadius="6px">
-              {showOptions ? <Trans>Hide</Trans> : <Trans>Edit</Trans>}
-            </ButtonGray>
+            {isLoading ? (
+              <Loader size="20px" />
+            ) : (
+              <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" borderRadius="6px">
+                {showOptions ? <Trans>Hide</Trans> : <Trans>Edit</Trans>}
+              </ButtonGray>
+            )}
           </RowBetween>
         </DarkGreyCard>
 

@@ -70,7 +70,7 @@ export const dataApi = createApi({
         )
 
         const mean = (tvl0: number, sumTvl0: number, tvl1: number, sumTvl1: number) =>
-          (tvl0 + tvl1) / (sumTvl0 + sumTvl1)
+          (tvl0 + tvl1) / (sumTvl0 + sumTvl1) || 0
 
         return {
           [FeeAmount.LOW]: mean(
