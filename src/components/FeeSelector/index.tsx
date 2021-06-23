@@ -16,8 +16,7 @@ import Loader from 'components/Loader'
 import { useBlockNumber } from 'state/application/hooks'
 
 // maximum number of blocks past which we consider the data stale
-// ~60 minutes for fee tier recommendation by TVL
-const MAX_DATA_BLOCK_AGE = 4
+const MAX_DATA_BLOCK_AGE = 10
 
 const ResponsiveText = styled(TYPE.label)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
