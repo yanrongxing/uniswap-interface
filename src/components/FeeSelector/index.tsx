@@ -58,8 +58,6 @@ function useFeeDistribution(token0: Token | undefined, token1: Token | undefined
     }
 
     if (latestBlock - dataBlock > MAX_DATA_BLOCK_AGE) {
-      // data is old, gracefully fail
-      console.log(`${latestBlock} ${dataBlock} ${latestBlock - dataBlock}`)
       return {
         isLoading,
         isUninitialized,
