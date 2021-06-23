@@ -16,6 +16,11 @@ export const dataApi = createApi({
       query: ({ token0, token1 }) => ({
         document: gql`
           query pools($token0: Bytes!, $token1: Bytes!) {
+            _meta {
+              block {
+                number
+              }
+            }
             asToken0: pools(
               orderBy: totalValueLockedToken0
               orderDirection: desc
@@ -74,24 +79,27 @@ export const dataApi = createApi({
           tvl0 === undefined && tvl1 === undefined ? undefined : ((tvl0 ?? 0) + (tvl1 ?? 0)) / (sumTvl0 + sumTvl1) || 0
 
         return {
-          [FeeAmount.LOW]: mean(
-            tvlByFeeTer[FeeAmount.LOW][0],
-            sumToken0Tvl,
-            tvlByFeeTer[FeeAmount.LOW][1],
-            sumToken1Tvl
-          ),
-          [FeeAmount.MEDIUM]: mean(
-            tvlByFeeTer[FeeAmount.MEDIUM][0],
-            sumToken0Tvl,
-            tvlByFeeTer[FeeAmount.MEDIUM][1],
-            sumToken1Tvl
-          ),
-          [FeeAmount.HIGH]: mean(
-            tvlByFeeTer[FeeAmount.HIGH][0],
-            sumToken0Tvl,
-            tvlByFeeTer[FeeAmount.HIGH][1],
-            sumToken1Tvl
-          ),
+          block: poolTvl._meta.block.number,
+          distributions: {
+            [FeeAmount.LOW]: mean(
+              tvlByFeeTer[FeeAmount.LOW][0],
+              sumToken0Tvl,
+              tvlByFeeTer[FeeAmount.LOW][1],
+              sumToken1Tvl
+            ),
+            [FeeAmount.MEDIUM]: mean(
+              tvlByFeeTer[FeeAmount.MEDIUM][0],
+              sumToken0Tvl,
+              tvlByFeeTer[FeeAmount.MEDIUM][1],
+              sumToken1Tvl
+            ),
+            [FeeAmount.HIGH]: mean(
+              tvlByFeeTer[FeeAmount.HIGH][0],
+              sumToken0Tvl,
+              tvlByFeeTer[FeeAmount.HIGH][1],
+              sumToken1Tvl
+            ),
+          },
         }
       },
     }),

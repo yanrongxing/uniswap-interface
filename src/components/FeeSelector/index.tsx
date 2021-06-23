@@ -13,6 +13,11 @@ import Badge from 'components/Badge'
 import { useGetFeeTierDistributionQuery } from 'state/data/slice'
 import { DarkGreyCard } from 'components/Card'
 import Loader from 'components/Loader'
+import { useBlockNumber } from 'state/application/hooks'
+
+// maximum number of blocks past which we consider the data stale
+// ~60 minutes for fee tier recommendation by TVL
+const MAX_DATA_BLOCK_AGE = 4
 
 const ResponsiveText = styled(TYPE.label)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -36,18 +41,26 @@ const FeeAmountLabel = {
 }
 
 function useFeeDistribution(token0: Token | undefined, token1: Token | undefined) {
-  const {
-    isLoading,
-    isUninitialized,
-    isError,
-    data: distributions,
-  } = useGetFeeTierDistributionQuery(
+  const latestBlock = useBlockNumber()
+  const { isLoading, isUninitialized, isError, data } = useGetFeeTierDistributionQuery(
     token0 && token1 ? { token0: token0.address.toLowerCase(), token1: token1.address.toLowerCase() } : skipToken
   )
 
   // auto-select fee tier when available
   return useMemo(() => {
-    if (isLoading || isUninitialized || isError || !distributions) {
+    const { distributions, block: dataBlock } = data ?? { distributions: undefined, block: undefined }
+
+    if (isLoading || isUninitialized || isError || !distributions || !latestBlock || !dataBlock) {
+      return {
+        isLoading,
+        isUninitialized,
+        isError,
+      }
+    }
+
+    if (latestBlock - dataBlock > MAX_DATA_BLOCK_AGE) {
+      // data is old, gracefully fail
+      console.log(`${latestBlock} ${dataBlock} ${latestBlock - dataBlock}`)
       return {
         isLoading,
         isUninitialized,
@@ -67,7 +80,7 @@ function useFeeDistribution(token0: Token | undefined, token1: Token | undefined
       distributions,
       largestUsageFeeTier,
     }
-  }, [isLoading, isUninitialized, isError, distributions])
+  }, [isLoading, isUninitialized, isError, data, latestBlock])
 }
 
 const FeeTierPercentageBadge = ({ percentage }: { percentage: string | undefined }) => {
