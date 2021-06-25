@@ -123,7 +123,7 @@ export default function WalletModal({
 }) {
   // important that these are destructed from the account-specific web3-react context
   const { active, account, connector, activate, error } = useWeb3React()
-
+  
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
@@ -180,7 +180,7 @@ export default function WalletModal({
     if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
       connector.walletConnectProvider = undefined
     }
-
+    
     connector &&
       activate(connector, undefined, true).catch((error) => {
         if (error instanceof UnsupportedChainIdError) {
@@ -189,6 +189,7 @@ export default function WalletModal({
           setPendingError(true)
         }
       })
+      
   }
 
   // close wallet modal if fortmatic modal is active
@@ -285,6 +286,7 @@ export default function WalletModal({
   }
 
   function getModalContent() {
+    console.log("getModalContent",error)
     if (error) {
       return (
         <UpperSection>

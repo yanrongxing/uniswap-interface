@@ -41,6 +41,8 @@ const SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.ROPSTEN,
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.BSCMAIN,
+  SupportedChainId.BSCTEST
 ]
 
 export const network = new NetworkConnector({
