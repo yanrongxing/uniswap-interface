@@ -29,6 +29,8 @@ const NETWORK_URLS: {
   [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.ARBITRUM_ONE]: `https://arb1.arbitrum.io/rpc`,
   [SupportedChainId.ARBITRUM_RINKEBY]: `https://rinkeby.arbitrum.io/rpc`,
+  [SupportedChainId.BSCMAIN]: 'https://bsc-dataseed.binance.org/',
+  [SupportedChainId.BSCTEST]: 'https://data-seed-prebsc-1-s1.binance.org:8545/'
 }
 
 const SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
